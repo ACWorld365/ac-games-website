@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Vertical - Official Site</title>
+    <link rel="icon" type="image/png" href="assets/images/icon/icon.png">
     <meta name="description" content="The addictive vertical arcade game! Fly up, dodge obstacles, and beat high scores.">
     <style>
         :root {
@@ -24,9 +25,36 @@
             text-align: center;
         }
 
+        /* Language Switcher */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
         header {
             padding: 50px 20px;
             background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
+            position: relative;
         }
 
         h1 {
@@ -41,6 +69,7 @@
             color: #a0a0a0;
             max-width: 600px;
             margin: 0 auto;
+            min-height: 43px; /* Reserve space to avoid layout shift */
         }
 
         .main-content {
@@ -122,44 +151,87 @@
 <body>
 
 <header>
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
+        <button class="lang-btn" onclick="setLanguage('nl')">NL</button>
+    </div>
     <h1>Flappy Vertical</h1>
-    <p class="subtitle">A new way to fly! Climb higher, avoid obstacles, and unlock legendary skins.</p>
+    <p class="subtitle" data-i18n="subtitle"></p>
 </header>
 
 <div class="main-content">
     <div class="download-buttons">
-        <!-- Replace # with your actual Play Store link -->
-        <a href="https://play.google.com/store/apps/details?id=com.acgames.flappy_vertical" class="btn btn-google" target="_blank">
-            Download on Google Play
-        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.acgames.flappy_vertical" class="btn btn-google" target="_blank" data-i18n="download"></a>
     </div>
 
     <div class="features">
         <div class="feature-card">
             <div class="feature-icon">🎮</div>
-            <h3>Addictive Gameplay</h3>
-            <p>An infinite vertical challenge. How high can you go?</p>
+            <h3 data-i18n="f1_title"></h3>
+            <p data-i18n="f1_desc"></p>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🎨</div>
-            <h3>Pixel Art</h3>
-            <p>Polished retro graphics and smooth animations.</p>
+            <h3 data-i18n="f2_title"></h3>
+            <p data-i18n="f2_desc"></p>
         </div>
         <div class="feature-card">
             <div class="feature-icon">🏆</div>
-            <h3>Competition</h3>
-            <p>Beat your high score and compete with players worldwide.</p>
+            <h3 data-i18n="f3_title"></h3>
+            <p data-i18n="f3_desc"></p>
         </div>
     </div>
 </div>
 
 <footer>
-    <p>&copy; 2026 AC Games. All rights reserved.</p>
+    <p data-i18n="copyright"></p>
     <p>
-        <a href="privacy.html">Privacy Policy</a> |
-        <a href="mailto:contact.acgames@gmail.com">Contact Support</a>
+        <a href="privacy.html" data-i18n="privacy"></a> |
+        <a href="mailto:contact.acgames@gmail.com" data-i18n="contact"></a> |
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdZzHMHshPBBY7BNYXii3B9XnnJP37MFufVLUTgq1Bfntp4zA/viewform?usp=preview" target="_blank" data-i18n="delete_account"></a>
     </p>
 </footer>
+
+<!-- Translation files -->
+<script src="i18n/en.js"></script>
+<script src="i18n/fr.js"></script>
+<script src="i18n/nl.js"></script>
+
+<script>
+    const allTranslations = {
+        en: translations_en,
+        fr: translations_fr,
+        nl: translations_nl
+    };
+
+    function setLanguage(lang) {
+        const translations = allTranslations[lang] || allTranslations.en;
+
+        // Update text content
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                element.innerHTML = translations[key];
+            }
+        });
+
+        // Update active button state
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent.toLowerCase() === lang) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Update html lang attribute
+        document.documentElement.lang = lang;
+    }
+
+    // Load the default language as soon as the script runs
+    // This makes the text appear faster than waiting for DOMContentLoaded
+    setLanguage('en');
+</script>
 
 </body>
 </html>
